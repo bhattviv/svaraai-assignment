@@ -8,7 +8,7 @@
         "-sp .isort.cfg"
     ],
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": "explicit"
     },
     "python.pythonPath": "/home/venelin/.local/share/virtualenvs/deploy-bert-nVc6J_EC/bin/python"
 }

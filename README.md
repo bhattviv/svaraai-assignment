@@ -1,66 +1,137 @@
-# Deploy BERT for Sentiment Analsysi with FastAPI
+# Sentiment Analysis of Email Replies
 
-Deploy a pre-trained BERT model for Sentiment Analysis as a REST API using FastAPI
+This project provides a machine learning and NLP pipeline to classify email replies into **positive**, **negative**, or **neutral** sentiments. It includes a **FastAPI-based API** for real-time predictions.
 
-## Demo
+---
 
-The model is trained to classify sentiment (negative, neutral, and positive) on a custom dataset from app reviews on Google Play. Here's a sample request to the API:
+## **Project Structure**
 
-```bash
-http POST http://127.0.0.1:8000/predict text="Good basic lists, i would like to create more lists, but the annual fee for unlimited lists is too out there"
-```
+Deploy-BERT-for-Sentiment-Analysis-with-FastAPI/
+│
+├─ sentiment_analyzer/
+│ └─ classifier/
+│ ├─ baseline.py # Baseline models (Logistic Regression, LightGBM)
+│ ├─ label_mapping.pkl # Label mapping for predictions
+│ ├─ tfidf_vectorizer.pkl
+│ └─ baseline_lgbm_model.pkl / baseline_logreg_model.pkl
+│
+├─ app.py # FastAPI application
+├─ frontend.py # Streamlit interactive demo
+├─ test_model.py # Script to test models locally
+├─ reply_classification_dataset.csv
+├─ README.md # This file
+└─ requirements.txt # Python dependencies
 
-The response you'll get looks something like this:
 
-```js
-{
-    "confidence": 0.9999083280563354,
-    "probabilities": {
-        "negative": 3.563107020454481e-05,
-        "neutral": 0.9999083280563354,
-        "positive": 5.596495248028077e-05
-    },
-    "sentiment": "neutral"
-}
-```
+---
 
-You can also [read the complete tutorial here](https://www.curiousily.com/posts/deploy-bert-for-sentiment-analysis-as-rest-api-using-pytorch-transformers-by-hugging-face-and-fastapi/)
+## **Setup Instructions**
 
-## Installation
+### **1. Clone the repository**
 
-Clone this repo:
-
-```sh
-git clone git@github.com:curiousily/Deploy-BERT-for-Sentiment-Analysis-with-FastAPI.git
+git clone <your-repo-url>
 cd Deploy-BERT-for-Sentiment-Analysis-with-FastAPI
-```
 
-Install the dependencies:
+2. Create a virtual environment (recommended)
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux / Mac
 
-```sh
-pipenv install --dev
-```
+3. Install dependencies
+pip install -r requirements.txt
 
-Download the pre-trained model:
+Running the API (FastAPI)
 
-```sh
-bin/download_model
-```
+Start the FastAPI server:
 
-## Test the setup
+python -m uvicorn app:app --reload
 
-Start the HTTP server:
 
-```sh
-bin/start_server
-```
+Open Swagger UI to test endpoints:
 
-Send a test request:
+http://127.0.0.1:8000/docs
 
-```sh
-bin/test_request
-```
 
-## License
+GET /: Check if API is running.
 
-MIT
+POST /predict: Send JSON input to get sentiment predictions.
+
+Example JSON input:
+
+{
+  "texts": [
+    "Looking forward to the demo!",
+    "I am not interested in this offer."
+  ]
+}
+
+
+Example JSON output:
+
+{
+  "predictions": [
+    {
+      "text": "Looking forward to the demo!",
+      "logistic_regression": "positive",
+      "lightgbm": "positive"
+    },
+    {
+      "text": "I am not interested in this offer.",
+      "logistic_regression": "negative",
+      "lightgbm": "negative"
+    }
+  ]
+}
+
+Running the Streamlit Demo
+
+Open a new terminal (FastAPI server must be running).
+
+Run:
+
+python -m streamlit run frontend.py
+
+
+A browser window will open with a text box. Enter your text and click Predict Sentiment.
+
+Testing Models Locally
+
+You can use test_model.py to quickly check predictions without running the API:
+
+python test_model.py
+
+Requirements
+
+Python 3.10+
+
+Libraries: pandas, numpy, scikit-learn, lightgbm, joblib, fastapi, uvicorn, streamlit
+
+Install all dependencies using pip install -r requirements.txt.
+
+Project Highlights
+
+Baseline models: Logistic Regression and LightGBM with TF-IDF vectorization.
+
+FastAPI /predict endpoint supports batch predictions.
+
+Streamlit demo for interactive sentiment analysis.
+
+Saved models and vectorizer for reproducibility.
+
+Next Steps / Improvements
+
+Fine-tune a transformer model (e.g., DistilBERT) for better performance.
+
+Include confidence scores in API responses.
+
+Deploy the app online using Render, Railway, or Hugging Face Spaces.
+
+Add a Dockerfile for containerized deployment.
+
+Author
+
+Vivek Bhatt
+AI/ML Intern | Data Science Enthusiast
+
+
+---
