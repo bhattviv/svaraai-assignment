@@ -23,7 +23,7 @@ Deploy-BERT-for-Sentiment-Analysis-with-FastAPI/
 └─ requirements.txt # Python dependencies
 
 
----
+
 
 ## **Setup Instructions**
 
